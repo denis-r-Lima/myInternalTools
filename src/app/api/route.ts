@@ -46,6 +46,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PUT(request: Request) {
+  connectFirebaseAdmin();
   const { data } = await request.json();
   const token = request.headers.get("token");
   if (!token) return new Response("User not authenticated!", { status: 401 });
