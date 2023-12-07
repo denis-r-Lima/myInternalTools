@@ -1,0 +1,32 @@
+@keyframes RemoveCard {
+  from {
+    padding: 1rem;
+    max-height: 2rem;
+  }
+  to {
+    padding: 0;
+    max-height: 0;
+  }
+}
+
+.remove {
+  opacity: 0;
+  transform: scale(90%);
+  margin: 0;
+  animation-name: RemoveCard;
+  animation-duration: 0.3s;
+  animation-delay: 0.72s;
+  animation-fill-mode: forwards;
+  transition: margin 0.3s linear 0.35s, transform 0.3s linear 0s,
+    background-color 0.2s linear 0s, opacity 0.6s linear 0s;
+}
+
+.completed {
+  background-color: rgb(187, 247, 208);
+  margin-left: 200rem;
+}
+
+.incomplete {
+  background-color: rgb(254, 202, 202);
+  margin-left: -200rem;
+}

@@ -1,0 +1,20 @@
+.animate {
+  max-width: 15rem;
+  transition: all linear 0.2s;
+  text-wrap: nowrap;
+}
+
+.closed {
+  max-width: 2rem;
+  padding: 0;
+  max-height: 0;
+}
+
+.opened:hover {
+  background-color: #e2e8f0;
+  color: #334155;
+}
+
+.opacityBG {
+  background-color: #33415599;
+}
