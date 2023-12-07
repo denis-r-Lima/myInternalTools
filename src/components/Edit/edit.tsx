@@ -27,7 +27,6 @@ export default function Edit() {
   }>({ index: -1, old: "", new: "" });
 
   useEffect(() => {
-    console.log("aqui");
     if (!fetched) {
       fetchFromStore();
       return;

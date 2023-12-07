@@ -11,11 +11,7 @@
 }
 
 .over {
-  transform: scale(0);
-}
-
-.opened {
-  transform: scale(1);
+  border: none;
 }
 
 .opened:hover {

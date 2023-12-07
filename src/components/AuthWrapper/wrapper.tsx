@@ -12,6 +12,9 @@ const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   useEffect(() => {
     setLoadingData(loading);
   }, [authUser, loading]);
+
+  const path = window.location.pathname;
+  if (path === "/setgym") console.log("Eh aqui");
   return (
     <>
       {!loading && !authUser && <Login />}

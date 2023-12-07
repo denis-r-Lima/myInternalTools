@@ -6,7 +6,7 @@ import Header from "@/components/Header/header";
 import LoadingProvider from "@/context/loadingContext";
 import HabitContextProvider from "@/context/habitContext";
 import AuthUserProvider from "@/context/authContext";
-import Wrapper from "@/components/Wrapper/wrapper";
+import Wrapper from "@/components/AuthWrapper/wrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,7 +27,6 @@ export default function RootLayout({
           <LoadingProvider>
             <HabitContextProvider>
               <Wrapper>
-                <Header />
                 {children}
                 <Menu />
               </Wrapper>

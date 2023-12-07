@@ -48,7 +48,7 @@ const Menu: React.FC = () => {
         <h3
           className={`text-slate-200 border-solid border-2 overflow-hidden rounded-lg w-60 px-6 py-2 text-center bg-slate-700 cursor-pointer animate ${
             item.opened ? "opened" : "closed"
-          } ${idx > 2 ? "over" : ""}`}
+          } ${idx > 2 && !item.opened ? "over" : ""}`}
           onClick={() => handleCLick(idx)}
           key={item.text}
         >
