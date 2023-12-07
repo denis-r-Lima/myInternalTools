@@ -13,7 +13,7 @@ const Menu: React.FC = () => {
     { text: "EDIT HABIT", opened: false, route: "/edit" },
     { text: "TRACK HABIT", opened: false, route: "/track" },
     { text: "HABIT DASHBOARD", opened: false, route: "/dash" },
-    { text: "GYM SET TRACKER", opened: false, route: "/set" },
+    { text: "GYM SET TRACKER", opened: false, route: "/setgym" },
   ]);
   const openCloseMenu = (index: number = 0, close: boolean) => {
     if (close && index < 0) return;
@@ -36,7 +36,7 @@ const Menu: React.FC = () => {
 
   return (
     <div
-      className="fixed p-3 top-0 right-0 flex flex-col items-end gap-1 cursor-pointer opacityBG rounded-md"
+      className="fixed p-3 top-2 right-2 flex flex-col items-end gap-1 cursor-pointer opacityBG rounded-md"
       onClick={(_) =>
         openCloseMenu(
           menuItems[0].opened ? menuItems.length - 1 : 0,
@@ -48,7 +48,7 @@ const Menu: React.FC = () => {
         <h3
           className={`text-slate-200 border-solid border-2 overflow-hidden rounded-lg w-60 px-6 py-2 text-center bg-slate-700 cursor-pointer animate ${
             item.opened ? "opened" : "closed"
-          }`}
+          } ${idx > 2 ? "over" : ""}`}
           onClick={() => handleCLick(idx)}
           key={item.text}
         >

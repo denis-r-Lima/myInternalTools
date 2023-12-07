@@ -60,8 +60,8 @@ const HabitContextProvider: React.FC<{
         resetToday(`${month}-${day}-${year}`, data);
       }
 
-      setHabit(data);
       setFetched(true);
+      setHabit(data);
     } catch (e) {
       console.error(e);
     } finally {

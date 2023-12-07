@@ -10,6 +10,14 @@
   max-height: 0;
 }
 
+.over {
+  transform: scale(0);
+}
+
+.opened {
+  transform: scale(1);
+}
+
 .opened:hover {
   background-color: #e2e8f0;
   color: #334155;
