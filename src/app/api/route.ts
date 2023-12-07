@@ -1,5 +1,6 @@
+import getCredentials from "@/lib/firebase/credentials";
 import getDB from "@/lib/firebase/database";
-import { auth } from "firebase-admin";
+import * as admin from "firebase-admin";
 import { NextRequest } from "next/server";
 
 type HabitType = {
@@ -14,6 +15,7 @@ type HabitType = {
 };
 
 export async function GET(request: NextRequest) {
+  connectFirebaseAdmin();
   const token = request.headers.get("token");
 
   if (!token) return new Response("User not authenticated!", { status: 401 });
@@ -72,7 +74,7 @@ async function checkToken(token: string): Promise<string | null> {
   console.log({ token });
   if (!token) return null;
   try {
-    const user = await auth().verifyIdToken(token);
+    const user = await admin.auth().verifyIdToken(token);
     console.log({ user });
     if (!user) return null;
     return user.uid;
@@ -80,4 +82,13 @@ async function checkToken(token: string): Promise<string | null> {
     console.log({ error });
     return null;
   }
+}
+
+export default function connectFirebaseAdmin() {
+  if (!admin.apps.length) {
+    admin.initializeApp({
+      credential: admin.credential.cert(getCredentials()),
+    });
+  }
+  return admin;
 }
