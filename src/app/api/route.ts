@@ -69,15 +69,15 @@ export async function DELETE(request: Request) {
 }
 
 async function checkToken(token: string): Promise<string | null> {
-  console.log(token);
+  console.log({ token });
   if (!token) return null;
   try {
     const user = await auth().verifyIdToken(token);
-    console.log(user);
+    console.log({ user });
     if (!user) return null;
     return user.uid;
   } catch (error) {
-    console.log(error);
+    console.log({ error });
     return null;
   }
 }
