@@ -15,6 +15,7 @@ type HabitType = {
 
 export async function GET(request: NextRequest) {
   const token = request.headers.get("token");
+  console.log(token);
   if (!token) return new Response("User not authenticated!", { status: 401 });
 
   const user = await checkToken(token);
