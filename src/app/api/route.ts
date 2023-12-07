@@ -84,7 +84,7 @@ async function checkToken(token: string): Promise<string | null> {
   }
 }
 
-export default function connectFirebaseAdmin() {
+function connectFirebaseAdmin() {
   if (!admin.apps.length) {
     admin.initializeApp({
       credential: admin.credential.cert(getCredentials()),
