@@ -17,7 +17,6 @@ const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     if (!loading && !authUser) router.push("/signin");
   }, [authUser, loading]);
 
-  console.log({ loading, authUser });
   return (
     <>
       {!loading && !authUser && <Login />}

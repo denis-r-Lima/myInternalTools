@@ -11,7 +11,8 @@ const Login: React.FC = () => {
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const router = useRouter();
 
-  const onLogin = async () => {
+  const onLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
       await signIn(loginData.email, loginData.password);
       router.push("/");
@@ -31,14 +32,21 @@ const Login: React.FC = () => {
           <CardTitle>Login</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
-          <Input name="email" placeholder="Email" onChange={handleChange} />
-          <Input
-            name="password"
-            placeholder="Password"
-            type="password"
-            onChange={handleChange}
-          />
-          <Button onClick={onLogin}>Login</Button>
+          <form onSubmit={(e) => onLogin(e)} className="flex flex-col gap-2">
+            <Input
+              name="email"
+              placeholder="Email"
+              type="email"
+              onChange={handleChange}
+            />
+            <Input
+              name="password"
+              placeholder="Password"
+              type="password"
+              onChange={handleChange}
+            />
+            <Button type="submit">Login</Button>
+          </form>
         </CardContent>
       </Card>
     </div>
