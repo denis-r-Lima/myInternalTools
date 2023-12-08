@@ -5,18 +5,29 @@ import { useAuth } from "@/context/authContext";
 
 import { useLoading } from "@/context/loadingContext";
 import Login from "../Login/login";
+import Menu from "../Menu/menu";
+import Loading from "../Loader/loader";
+import { useRouter } from "next/navigation";
 
 const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { authUser, loading } = useAuth();
-  const { setLoadingData } = useLoading();
+  const { loadingData } = useLoading();
+  const router = useRouter();
   useEffect(() => {
-    setLoadingData(loading);
+    if (!loading && !authUser) router.push("/signin");
   }, [authUser, loading]);
 
+  console.log({ loading, authUser });
   return (
     <>
       {!loading && !authUser && <Login />}
-      {!loading && authUser && <>{children}</>}
+      {!loading && authUser && (
+        <>
+          {children}
+          <Menu />
+        </>
+      )}
+      {(loadingData || loading) && <Loading />}
     </>
   );
 };

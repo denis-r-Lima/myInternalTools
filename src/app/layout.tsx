@@ -26,10 +26,7 @@ export default function RootLayout({
         <AuthUserProvider>
           <LoadingProvider>
             <HabitContextProvider>
-              <Wrapper>
-                {children}
-                <Menu />
-              </Wrapper>
+              <Wrapper>{children}</Wrapper>
             </HabitContextProvider>
           </LoadingProvider>
         </AuthUserProvider>

@@ -28,7 +28,7 @@ const useFirebaseAuth = () => {
 
   const clear = () => {
     setAuthUser(null);
-    setLoading(true);
+    setLoading(false);
   };
 
   const signIn = async (email: string, password: string) => {

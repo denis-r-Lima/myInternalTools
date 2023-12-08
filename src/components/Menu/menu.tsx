@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import "./style.css";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/authContext";
 
 const ANIMATIONDURATION = 550; //0.5s
 
@@ -14,7 +15,11 @@ const Menu: React.FC = () => {
     { text: "TRACK HABIT", opened: false, route: "/track" },
     { text: "HABIT DASHBOARD", opened: false, route: "/dash" },
     { text: "GYM SET TRACKER", opened: false, route: "/setgym" },
+    { text: "SIGN OUT", opened: false, route: "signout" },
   ]);
+
+  const { signOut } = useAuth();
+
   const openCloseMenu = (index: number = 0, close: boolean) => {
     if (close && index < 0) return;
     if (!close && index >= menuItems.length) return;
@@ -29,8 +34,13 @@ const Menu: React.FC = () => {
     }, ANIMATIONDURATION / menuItems.length);
   };
 
-  const handleCLick = (index: number) => {
+  const handleCLick = async (index: number) => {
     if (!menuItems[index].opened) return;
+    if (menuItems[index].route === "signout") {
+      await signOut();
+      router.push("/signin");
+      return;
+    }
     router.push(menuItems[index].route);
   };
 

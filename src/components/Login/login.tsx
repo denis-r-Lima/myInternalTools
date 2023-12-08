@@ -4,14 +4,17 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 const Login: React.FC = () => {
   const { signIn } = useAuth();
   const [loginData, setLoginData] = useState({ email: "", password: "" });
+  const router = useRouter();
 
   const onLogin = async () => {
     try {
       await signIn(loginData.email, loginData.password);
+      router.push("/");
     } catch (e: any) {
       console.error(e);
     }
