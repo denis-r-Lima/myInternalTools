@@ -3,8 +3,10 @@ import { useLoading } from "@/context/loadingContext";
 import { getAuth, getIdToken } from "firebase/auth";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { Card, CardContent } from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
+
+import { FaRegEdit, FaRegWindowClose } from "react-icons/fa";
 
 type GymType = {
   days: { exercises: { name: string; weight: number; set: string }[] }[];
@@ -19,6 +21,7 @@ const Gym: React.FC = () => {
     weight: 0,
     set: "",
   });
+  const [editingIndex, setEditingIndex] = useState(-1);
   const [openPopUp, setOpenPopUp] = useState(false);
 
   const fetchFromStore = useCallback(async () => {
@@ -82,17 +85,24 @@ const Gym: React.FC = () => {
       const temp: GymType = {
         days: gym.days.map((d, idx) => {
           if (idx !== showingDay) return d;
-          return { exercises: [...d.exercises, newExercise] };
+          return {
+            exercises:
+              editingIndex < 0
+                ? [...d.exercises, newExercise]
+                : d.exercises.map((e, idx) =>
+                    idx !== editingIndex ? e : newExercise
+                  ),
+          };
         }),
       };
       updateStore(temp);
-      setGym(temp);
-      setNewExercise({
-        name: "",
-        weight: 0,
-        set: "",
-      });
     }
+    setEditingIndex(-1);
+    setNewExercise({
+      name: "",
+      weight: 0,
+      set: "",
+    });
 
     setOpenPopUp(false);
   };
@@ -100,6 +110,23 @@ const Gym: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.currentTarget;
     setNewExercise((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const handleDelete = (index: number) => {
+    const temp: GymType = {
+      days: gym.days.map((d, idx) =>
+        idx !== showingDay
+          ? d
+          : { exercises: d.exercises.filter((_, i) => i !== index) }
+      ),
+    };
+    updateStore(temp);
+  };
+
+  const handleEdit = (index: number) => {
+    setNewExercise(gym.days[showingDay].exercises[index]);
+    setEditingIndex(index);
+    setOpenPopUp(true);
   };
 
   return (
@@ -133,45 +160,59 @@ const Gym: React.FC = () => {
         >
           Add exercise
         </Button>
-        {gym.days[showingDay]?.exercises?.map((e) => (
+        {gym.days[showingDay]?.exercises?.map((e, index) => (
           <Card key={e.name}>
-            <CardContent>
-              {e.name} {e.weight}lb {e.set}
+            <CardHeader className="flex-row justify-between items-center">
+              <CardTitle>{e.name}</CardTitle>
+              <div className="flex-row flex relative bottom-5 gap-2">
+                <FaRegEdit onClick={() => handleEdit(index)} />
+                <FaRegWindowClose onClick={() => handleDelete(index)} />
+              </div>
+            </CardHeader>
+            <CardContent className="flex flex-row justify-between px-16">
+              <h1 className="text-xl">
+                <b>Weight: </b>
+                {e.weight} lb
+              </h1>
+              <h1 className="text-xl">
+                <b>Reps: </b>
+                {e.set}
+              </h1>
             </CardContent>
           </Card>
         ))}
       </div>
-      <div
-        className={`fixed top-0 left-0 right-0 bottom-0 bg-slate-600 bg-opacity-75 z-50 grid place-items-center ${
-          openPopUp ? "" : "hidden"
-        }`}
-      >
-        <Card className="w-11/12 max-w-2xl px-2 py-4">
-          <CardContent className="flex flex-col gap-3">
-            <Input
-              placeholder="Exercise Name"
-              name="name"
-              value={newExercise.name}
-              onChange={handleChange}
-            />
-            <Input
-              placeholder="Weight"
-              name="weight"
-              value={newExercise.weight}
-              onChange={handleChange}
-              type="number"
-            />
-            <Input
-              placeholder="Reps"
-              name="set"
-              value={newExercise.set}
-              onChange={handleChange}
-            />
-            <Button onClick={() => addEdit(true)}>Ok</Button>
-            <Button onClick={() => addEdit()}>Cancel</Button>
-          </CardContent>
-        </Card>
-      </div>
+      {openPopUp && (
+        <div
+          className={`fixed top-0 left-0 right-0 bottom-0 bg-slate-600 bg-opacity-75 z-50 grid place-items-center`}
+        >
+          <Card className="w-11/12 max-w-2xl px-2 py-4">
+            <CardContent className="flex flex-col gap-3">
+              <Input
+                placeholder="Exercise Name"
+                name="name"
+                value={newExercise.name}
+                onChange={handleChange}
+              />
+              <Input
+                placeholder="Weight"
+                name="weight"
+                value={newExercise.weight}
+                onChange={handleChange}
+                type="number"
+              />
+              <Input
+                placeholder="Reps"
+                name="set"
+                value={newExercise.set}
+                onChange={handleChange}
+              />
+              <Button onClick={() => addEdit(true)}>Ok</Button>
+              <Button onClick={() => addEdit()}>Cancel</Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </>
   );
 };

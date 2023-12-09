@@ -35,7 +35,11 @@ const Menu: React.FC = () => {
   };
 
   const handleCLick = async (index: number) => {
-    if (!menuItems[index].opened) return;
+    if (
+      !menuItems[index].opened ||
+      menuItems[index].route === window.location.pathname
+    )
+      return;
     if (menuItems[index].route === "signout") {
       await signOut();
       router.push("/signin");
