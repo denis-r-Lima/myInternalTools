@@ -169,12 +169,12 @@ const Gym: React.FC = () => {
                 <FaRegWindowClose onClick={() => handleDelete(index)} />
               </div>
             </CardHeader>
-            <CardContent className="flex flex-row justify-between px-16">
-              <h1 className="text-xl">
+            <CardContent className="flex flex-row justify-between px-6">
+              <h1 className="text-lg">
                 <b>Weight: </b>
                 {e.weight} lb
               </h1>
-              <h1 className="text-xl">
+              <h1 className="text-lg">
                 <b>Reps: </b>
                 {e.set}
               </h1>
