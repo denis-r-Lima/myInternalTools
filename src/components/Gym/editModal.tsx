@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { getAuth, getIdToken } from "firebase/auth";
 
 type Props = {
   newExercise: { name: string; weight: number; set: string; gifUrl: string };
@@ -51,15 +52,15 @@ const EditModal: React.FC<Props> = ({ newExercise, handleChange, addEdit }) => {
   const [target, setTarget] = useState("");
 
   const fetchExercise = useCallback(async (val: string) => {
-    const url = `https://exercisedb.p.rapidapi.com/exercises/target/${val}?limit=300`;
-    const options = {
-      method: "GET",
-      headers: {
-        "X-RapidAPI-Key": process.env.NEXT_PUBLIC_X_RAPIDAPI_KEY as string,
-        "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
-      },
-    };
+    const auth = getAuth();
+    if (!auth.currentUser) return;
     try {
+      const token = await getIdToken(auth.currentUser);
+      const url = `/api/gym/exercise?target=${val}`;
+      const options = {
+        method: "GET",
+        headers: { token },
+      };
       const response = await fetch(url, options);
       const result = await response.json();
       setExerciseList(result);

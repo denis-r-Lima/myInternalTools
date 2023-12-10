@@ -24,7 +24,7 @@ const Gym: React.FC = () => {
     set: "",
     gifUrl: "",
   });
-  console.log(newExercise);
+
   const [editingIndex, setEditingIndex] = useState(-1);
   const [openPopUp, setOpenPopUp] = useState(false);
 
