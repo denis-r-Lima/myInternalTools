@@ -222,6 +222,7 @@ const Gym: React.FC = () => {
           addEdit={addEdit}
           newExercise={newExercise}
           handleChange={handleChange}
+          editingIndex={editingIndex}
         />
       )}
     </>
