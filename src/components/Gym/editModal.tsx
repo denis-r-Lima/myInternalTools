@@ -3,6 +3,9 @@ import { useEffect, useState, useCallback } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
+import { Check, ChevronsUpDown } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 import {
   Select,
   SelectItem,
@@ -11,6 +14,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "../ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { getAuth, getIdToken } from "firebase/auth";
 
 type Props = {
@@ -41,6 +52,29 @@ const TARGET_MUSCLE = [
   "upper back",
 ];
 
+const frameworks = [
+  {
+    value: "next.js",
+    label: "Next.js",
+  },
+  {
+    value: "sveltekit",
+    label: "SvelteKit",
+  },
+  {
+    value: "nuxt.js",
+    label: "Nuxt.js",
+  },
+  {
+    value: "remix",
+    label: "Remix",
+  },
+  {
+    value: "astro",
+    label: "Astro",
+  },
+];
+
 type ExerciseList = {
   gifUrl: string;
   name: string;
@@ -50,6 +84,8 @@ type ExerciseList = {
 const EditModal: React.FC<Props> = ({ newExercise, handleChange, addEdit }) => {
   const [exerciseList, setExerciseList] = useState<ExerciseList>([]);
   const [target, setTarget] = useState("");
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
 
   const fetchExercise = useCallback(async (val: string) => {
     const auth = getAuth();
@@ -110,21 +146,60 @@ const EditModal: React.FC<Props> = ({ newExercise, handleChange, addEdit }) => {
             </SelectContent>
           </Select>
 
-          <Select onValueChange={selectExercise}>
-            <SelectTrigger className="w-12/12 bg-white border-solid border border-slate-200 rounded-lg py-1">
-              <SelectValue placeholder="Exercise" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup className="bg-white w-12/12">
-                {exerciseList.map((exercise, idx) => (
-                  <SelectItem key={exercise.id} value={`${idx}`}>
-                    {exercise.name.charAt(0).toUpperCase() +
-                      exercise.name.slice(1)}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={open}
+                className="w-12/12 justify-between"
+              >
+                {value
+                  ? exerciseList[parseInt(value)].name.charAt(0).toUpperCase() +
+                    exerciseList[parseInt(value)].name.slice(1)
+                  : "Select exercise..."}
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[500px] max-w-full p-0 overflow-auto max-h-96">
+              <Command
+                filter={(value, search) => {
+                  if (
+                    exerciseList[parseInt(value)]?.name
+                      ?.toLowerCase()
+                      .includes(search.toLowerCase())
+                  )
+                    return 1;
+                  return 0;
+                }}
+              >
+                <CommandInput placeholder="Search exercise..." />
+                <CommandEmpty>No exercise found.</CommandEmpty>
+                <CommandGroup>
+                  {exerciseList.map((exercise, idx) => (
+                    <CommandItem
+                      key={exercise.id}
+                      value={`${idx}`}
+                      onSelect={(currentValue) => {
+                        setValue(currentValue === value ? "" : currentValue);
+                        selectExercise(currentValue);
+                        setOpen(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          value === `${idx}` ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      {exercise.name.charAt(0).toUpperCase() +
+                        exercise.name.slice(1)}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          </Popover>
 
           {newExercise.gifUrl !== "" && (
             <div className="w-12/12 flex justify-center">

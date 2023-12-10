@@ -111,7 +111,6 @@ const Gym: React.FC = () => {
 
     setOpenPopUp(false);
   };
-  console.log(newExercise);
   const handleChange = (e: {
     currentTarget: { name: string; value: string };
   }) => {
