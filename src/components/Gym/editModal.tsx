@@ -162,7 +162,6 @@ const EditModal: React.FC<Props> = ({
                         )
                           matches++;
                       });
-                      console.log(matches / words.length);
 
                       return matches === words.length ? 1 : 0;
                     }}
