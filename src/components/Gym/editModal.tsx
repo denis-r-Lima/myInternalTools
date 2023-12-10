@@ -151,13 +151,20 @@ const EditModal: React.FC<Props> = ({
                 <PopoverContent className="w-[75vw] max-w-xl p-0 overflow-auto max-h-96">
                   <Command
                     filter={(value, search) => {
-                      if (
-                        exerciseList[parseInt(value)]?.name
-                          ?.toLowerCase()
-                          .includes(search.toLowerCase())
-                      )
-                        return 1;
-                      return 0;
+                      if (search.length < 4) return 1;
+                      const words = search.split(" ");
+                      let matches = 0;
+                      words.map((word) => {
+                        if (
+                          exerciseList[parseInt(value)]?.name
+                            ?.toLowerCase()
+                            .includes(word.toLowerCase())
+                        )
+                          matches++;
+                      });
+                      console.log(matches / words.length);
+
+                      return matches === words.length ? 1 : 0;
                     }}
                   >
                     <CommandInput placeholder="Search exercise..." />
