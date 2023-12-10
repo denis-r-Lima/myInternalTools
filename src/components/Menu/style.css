@@ -15,8 +15,14 @@
 }
 
 .opened:hover {
-  background-color: #e2e8f0;
-  color: #334155;
+  color: #e2e8f0;
+  background-color: #334155;
+}
+
+.current {
+  color: #e2e8f0;
+  background-color: #334155;
+  cursor: default;
 }
 
 .opacityBG {

@@ -60,9 +60,11 @@ const Menu: React.FC = () => {
     >
       {menuItems.map((item, idx) => (
         <h3
-          className={`text-slate-200 border-solid border-2 overflow-hidden rounded-lg w-60 px-6 py-2 text-center bg-slate-700 cursor-pointer whitespace-nowrap animate ${
+          className={`text-slate-600 border-solid border-2 overflow-hidden rounded-lg w-60 px-6 py-2 text-center bg-slate-200 cursor-pointer whitespace-nowrap animate ${
             item.opened ? "opened" : "closed"
-          } ${idx > 2 && !item.opened ? "over" : ""}`}
+          } ${idx > 2 && !item.opened ? "over" : ""} ${
+            item.route === window.location.pathname ? "current" : ""
+          }`}
           onClick={() => handleCLick(idx)}
           key={item.text}
         >

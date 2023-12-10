@@ -4,12 +4,14 @@ import { getAuth, getIdToken } from "firebase/auth";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Input } from "../ui/input";
 
 import { FaRegEdit, FaRegWindowClose } from "react-icons/fa";
+import EditModal from "./editModal";
 
 type GymType = {
-  days: { exercises: { name: string; weight: number; set: string }[] }[];
+  days: {
+    exercises: { name: string; weight: number; set: string; gifUrl: string }[];
+  }[];
 };
 
 const Gym: React.FC = () => {
@@ -20,7 +22,9 @@ const Gym: React.FC = () => {
     name: "",
     weight: 0,
     set: "",
+    gifUrl: "",
   });
+  console.log(newExercise);
   const [editingIndex, setEditingIndex] = useState(-1);
   const [openPopUp, setOpenPopUp] = useState(false);
 
@@ -102,12 +106,15 @@ const Gym: React.FC = () => {
       name: "",
       weight: 0,
       set: "",
+      gifUrl: "",
     });
 
     setOpenPopUp(false);
   };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  console.log(newExercise);
+  const handleChange = (e: {
+    currentTarget: { name: string; value: string };
+  }) => {
     const { value, name } = e.currentTarget;
     setNewExercise((prevState) => ({ ...prevState, [name]: value }));
   };
@@ -127,6 +134,14 @@ const Gym: React.FC = () => {
     setNewExercise(gym.days[showingDay].exercises[index]);
     setEditingIndex(index);
     setOpenPopUp(true);
+  };
+
+  const handleDeleteDay = () => {
+    const temp: GymType = {
+      days: gym.days.filter((_, idx) => idx !== showingDay),
+    };
+    setShowingDay((prevState) => (prevState === 0 ? 0 : prevState - 1));
+    updateStore(temp);
   };
 
   return (
@@ -163,55 +178,52 @@ const Gym: React.FC = () => {
         {gym.days[showingDay]?.exercises?.map((e, index) => (
           <Card key={e.name}>
             <CardHeader className="flex-row justify-between items-center">
-              <CardTitle>{e.name}</CardTitle>
+              <CardTitle>
+                {e.name.charAt(0).toUpperCase() + e.name.slice(1)}
+              </CardTitle>
               <div className="flex-row flex relative bottom-5 gap-2">
-                <FaRegEdit onClick={() => handleEdit(index)} />
-                <FaRegWindowClose onClick={() => handleDelete(index)} />
+                <FaRegEdit
+                  onClick={() => handleEdit(index)}
+                  fontSize={"1.3rem"}
+                />
+                <FaRegWindowClose
+                  onClick={() => handleDelete(index)}
+                  fontSize={"1.3rem"}
+                />
               </div>
             </CardHeader>
             <CardContent className="flex flex-row justify-between px-6">
-              <h1 className="text-lg">
-                <b>Weight: </b>
-                {e.weight} lb
-              </h1>
-              <h1 className="text-lg">
-                <b>Reps: </b>
-                {e.set}
-              </h1>
+              {e.gifUrl !== "" && (
+                <div className="w-12/12 flex justify-center m-auto">
+                  <img src={e.gifUrl} width={200} />
+                </div>
+              )}
+              <div className="flex flex-col justify-end items-start">
+                <h1 className="text-lg">
+                  <b>Weight: </b>
+                  {e.weight} lb
+                </h1>
+                <h1 className="text-lg">
+                  <b>Reps: </b>
+                  {e.set}
+                </h1>
+              </div>
             </CardContent>
           </Card>
         ))}
+        <Button
+          className="bg-slate-200 text-slate-700 hover:text-slate-200"
+          onClick={() => handleDeleteDay()}
+        >
+          Delete Day
+        </Button>
       </div>
       {openPopUp && (
-        <div
-          className={`fixed top-0 left-0 right-0 bottom-0 bg-slate-600 bg-opacity-75 z-50 grid place-items-center`}
-        >
-          <Card className="w-11/12 max-w-2xl px-2 py-4">
-            <CardContent className="flex flex-col gap-3">
-              <Input
-                placeholder="Exercise Name"
-                name="name"
-                value={newExercise.name}
-                onChange={handleChange}
-              />
-              <Input
-                placeholder="Weight"
-                name="weight"
-                value={newExercise.weight}
-                onChange={handleChange}
-                type="number"
-              />
-              <Input
-                placeholder="Reps"
-                name="set"
-                value={newExercise.set}
-                onChange={handleChange}
-              />
-              <Button onClick={() => addEdit(true)}>Ok</Button>
-              <Button onClick={() => addEdit()}>Cancel</Button>
-            </CardContent>
-          </Card>
-        </div>
+        <EditModal
+          addEdit={addEdit}
+          newExercise={newExercise}
+          handleChange={handleChange}
+        />
       )}
     </>
   );
