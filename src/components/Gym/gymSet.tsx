@@ -195,7 +195,7 @@ const Gym: React.FC = () => {
             <CardContent className="flex flex-row justify-between px-6">
               {e.gifUrl !== "" && (
                 <div className="w-12/12 flex justify-center m-auto">
-                  <img src={e.gifUrl} width={200} />
+                  <img src={e.gifUrl} className="max-w-xs w-9/12" />
                 </div>
               )}
               <div className="flex flex-col justify-end items-start">

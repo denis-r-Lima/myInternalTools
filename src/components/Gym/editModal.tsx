@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState, useCallback } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
@@ -54,7 +55,7 @@ const EditModal: React.FC<Props> = ({ newExercise, handleChange, addEdit }) => {
     const options = {
       method: "GET",
       headers: {
-        "X-RapidAPI-Key": "fb968d3471mshe529dabb2be0eb6p1172a4jsna8dfbe925366",
+        "X-RapidAPI-Key": process.env.NEXT_PUBLIC_X_RAPIDAPI_KEY as string,
         "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
       },
     };
@@ -126,7 +127,7 @@ const EditModal: React.FC<Props> = ({ newExercise, handleChange, addEdit }) => {
 
           {newExercise.gifUrl !== "" && (
             <div className="w-12/12 flex justify-center">
-              <img src={newExercise.gifUrl} width={200} />
+              <img src={newExercise.gifUrl} className="max-w-xs w-9/12" />
             </div>
           )}
 
