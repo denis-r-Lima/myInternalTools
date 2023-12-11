@@ -23,6 +23,7 @@ import {
 } from "../ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { getAuth, getIdToken } from "firebase/auth";
+import Image from "next/image";
 
 type Props = {
   newExercise: {
@@ -205,7 +206,11 @@ const EditModal: React.FC<Props> = ({
           )}
           {newExercise.gifUrl !== "" && (
             <div className="w-12/12 flex justify-center">
-              <img src={newExercise.gifUrl} className="max-w-xs w-9/12" />
+              <img
+                alt={newExercise.name}
+                src={newExercise.gifUrl}
+                className="max-w-xs w-9/12"
+              />
             </div>
           )}
 

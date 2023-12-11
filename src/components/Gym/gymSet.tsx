@@ -5,7 +5,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
-import { FaRegEdit, FaRegWindowClose } from "react-icons/fa";
 import EditModal from "./editModal";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
@@ -195,82 +194,81 @@ const Gym: React.FC = () => {
           +
         </div>
       </div>
-      <div className="w-10/12 max-w-3xl flex flex-col flex-wrap gap-4 mx-auto justify-center mt-7">
+      <div className="w-10/12 max-w-6xl flex flex-col flex-wrap gap-4 mx-auto justify-center mt-7">
         <Button
           className="bg-slate-200 text-slate-700 hover:text-slate-200"
           onClick={() => handleOpen()}
         >
           Add exercise
         </Button>
-        {gym.days[showingDay]?.exercises?.map((e, index) => (
-          <Card key={e.name}>
-            {index > 0 && (
-              <div
-                className="w-full grid place-items-center hover:bg-slate-200 rounded-t"
-                onClick={() => moveCard(index, index - 1)}
-              >
-                <ChevronUp />
-              </div>
-            )}
-            <div
-              className="relative ml-auto  cursor-pointer"
-              onClick={() => handleDelete(index)}
-            >
-              <FaDumbbell className="absolute top-2 right-2" size={"1.5rem"} />
-              <FcCancel size={"2.5rem"} className="absolute top-0 right-0" />
-            </div>
-            <CardHeader className="flex-col flex justify-between items-center">
-              {/* <div className="flex-row flex justify-between w-full">
-                <FaRegEdit
-                  onClick={() => handleEdit(index)}
-                  fontSize={"1.3rem"}
-                />
-                <FaRegWindowClose
-                  onClick={() => handleDelete(index)}
-                  fontSize={"1.3rem"}
-                />
-              </div> */}
-              <CardTitle>
-                {e.name.charAt(0).toUpperCase() + e.name.slice(1)}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col justify-between px-6">
-              {e.gifUrl !== "" && (
-                <div className="w-12/12 flex justify-center m-auto">
-                  <img src={e.gifUrl} className="max-w-xs w-9/12" />
+        <div className="w-full flex flex-row flex-wrap gap-3 justify-center">
+          {gym.days[showingDay]?.exercises?.map((e, index) => (
+            <Card key={e.name} className="max-w-lg w-full">
+              {index > 0 && (
+                <div
+                  className="w-full grid place-items-center hover:bg-slate-200 rounded-t"
+                  onClick={() => moveCard(index, index - 1)}
+                >
+                  <ChevronUp />
                 </div>
               )}
-              <div className="flex flex-row justify-between items-center">
-                <h1 className="text-lg">
-                  <b>Weight: </b>
-                  {e.weight} lb
-                </h1>
-                <BiSolidMessageSquareEdit
-                  onClick={() => handleEdit(index)}
-                  fontSize={"1.3rem"}
-                />
-                <div className="flex flex-col justify-between items-start">
-                  <h1 className="text-lg">
-                    <b>Sets: </b>
-                    {e.set}
-                  </h1>
-                  <h1 className="text-lg">
-                    <b>Reps: </b>
-                    {e.rep}
-                  </h1>
-                </div>
-              </div>
-            </CardContent>
-            {index < gym.days[showingDay].exercises.length - 1 && (
               <div
-                className="w-full grid place-items-center hover:bg-slate-200 rounded-b"
-                onClick={() => moveCard(index, index + 1)}
+                className="relative ml-auto  cursor-pointer"
+                onClick={() => handleDelete(index)}
               >
-                <ChevronDown />
+                <FaDumbbell
+                  className="absolute top-2 right-2"
+                  size={"1.5rem"}
+                />
+                <FcCancel size={"2.5rem"} className="absolute top-0 right-0" />
               </div>
-            )}
-          </Card>
-        ))}
+              <CardHeader className="flex-col flex justify-between items-center">
+                <CardTitle>
+                  {e.name.charAt(0).toUpperCase() + e.name.slice(1)}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col justify-between px-6">
+                {e.gifUrl !== "" && (
+                  <div className="w-12/12 flex justify-center m-auto">
+                    <img
+                      alt={e.name}
+                      src={e.gifUrl}
+                      className="max-w-xs w-9/12"
+                    />
+                  </div>
+                )}
+                <div className="flex flex-row justify-between items-center">
+                  <h1 className="text-lg">
+                    <b>Weight: </b>
+                    {e.weight} lb
+                  </h1>
+                  <BiSolidMessageSquareEdit
+                    onClick={() => handleEdit(index)}
+                    fontSize={"1.3rem"}
+                  />
+                  <div className="flex flex-col justify-between items-start">
+                    <h1 className="text-lg">
+                      <b>Sets: </b>
+                      {e.set}
+                    </h1>
+                    <h1 className="text-lg">
+                      <b>Reps: </b>
+                      {e.rep}
+                    </h1>
+                  </div>
+                </div>
+              </CardContent>
+              {index < gym.days[showingDay].exercises.length - 1 && (
+                <div
+                  className="w-full grid place-items-center hover:bg-slate-200 rounded-b"
+                  onClick={() => moveCard(index, index + 1)}
+                >
+                  <ChevronDown />
+                </div>
+              )}
+            </Card>
+          ))}
+        </div>
         <Button
           className="bg-slate-200 text-slate-700 hover:text-slate-200"
           onClick={() => handleDeleteDay()}
