@@ -25,7 +25,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { getAuth, getIdToken } from "firebase/auth";
 
 type Props = {
-  newExercise: { name: string; weight: number; set: string; gifUrl: string };
+  newExercise: {
+    name: string;
+    weight: number;
+    set: string;
+    rep: string;
+    gifUrl: string;
+  };
   handleChange: (e: { currentTarget: { name: string; value: string } }) => void;
   addEdit: (ok?: boolean) => void;
   editingIndex: number;
@@ -211,9 +217,15 @@ const EditModal: React.FC<Props> = ({
             type="number"
           />
           <Input
-            placeholder="Reps"
+            placeholder="Sets"
             name="set"
             value={newExercise.set}
+            onChange={handleChange}
+          />
+          <Input
+            placeholder="Reps"
+            name="rep"
+            value={newExercise.rep}
             onChange={handleChange}
           />
           <Button onClick={() => addEdit(true)}>Ok</Button>

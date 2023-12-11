@@ -3,13 +3,7 @@ import { useLoading } from "@/context/loadingContext";
 import { getAuth, getIdToken } from "firebase/auth";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 import { FaRegEdit, FaRegWindowClose } from "react-icons/fa";
 import EditModal from "./editModal";
@@ -17,7 +11,13 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 
 type GymType = {
   days: {
-    exercises: { name: string; weight: number; set: string; gifUrl: string }[];
+    exercises: {
+      name: string;
+      weight: number;
+      set: string;
+      rep: string;
+      gifUrl: string;
+    }[];
   }[];
 };
 
@@ -29,6 +29,7 @@ const Gym: React.FC = () => {
     name: "",
     weight: 0,
     set: "",
+    rep: "",
     gifUrl: "",
   });
 
@@ -92,6 +93,7 @@ const Gym: React.FC = () => {
   };
 
   const addEdit = (ok: boolean = false) => {
+    if (newExercise.name === "") return setOpenPopUp(false);
     if (ok) {
       const temp: GymType = {
         days: gym.days.map((d, idx) => {
@@ -113,6 +115,7 @@ const Gym: React.FC = () => {
       name: "",
       weight: 0,
       set: "",
+      rep: "",
       gifUrl: "",
     });
 
@@ -197,12 +200,16 @@ const Gym: React.FC = () => {
         </Button>
         {gym.days[showingDay]?.exercises?.map((e, index) => (
           <Card key={e.name}>
-            <CardHeader className="flex-row justify-between items-center">
-              <ChevronUp onClick={() => moveCard(index, index - 1)} />
-              <CardTitle>
-                {e.name.charAt(0).toUpperCase() + e.name.slice(1)}
-              </CardTitle>
-              <div className="flex-row flex relative bottom-5 gap-2 p-2">
+            {index > 0 && (
+              <div
+                className="w-full grid place-items-center hover:bg-slate-200 rounded-t"
+                onClick={() => moveCard(index, index - 1)}
+              >
+                <ChevronUp />
+              </div>
+            )}
+            <CardHeader className="flex-col flex justify-between items-center">
+              <div className="flex-row flex justify-between w-full">
                 <FaRegEdit
                   onClick={() => handleEdit(index)}
                   fontSize={"1.3rem"}
@@ -212,27 +219,41 @@ const Gym: React.FC = () => {
                   fontSize={"1.3rem"}
                 />
               </div>
+              <CardTitle>
+                {e.name.charAt(0).toUpperCase() + e.name.slice(1)}
+              </CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-row justify-between px-6">
+            <CardContent className="flex flex-col justify-between px-6">
               {e.gifUrl !== "" && (
                 <div className="w-12/12 flex justify-center m-auto">
                   <img src={e.gifUrl} className="max-w-xs w-9/12" />
                 </div>
               )}
-              <div className="flex flex-col justify-end items-start">
+              <div className="flex flex-row justify-between items-start">
                 <h1 className="text-lg">
                   <b>Weight: </b>
                   {e.weight} lb
                 </h1>
-                <h1 className="text-lg">
-                  <b>Reps: </b>
-                  {e.set}
-                </h1>
+                <div className="flex flex-col justify-between items-start">
+                  <h1 className="text-lg">
+                    <b>Sets: </b>
+                    {e.set}
+                  </h1>
+                  <h1 className="text-lg">
+                    <b>Reps: </b>
+                    {e.rep}
+                  </h1>
+                </div>
               </div>
             </CardContent>
-            <CardFooter>
-              <ChevronDown onClick={() => moveCard(index, index + 1)} />
-            </CardFooter>
+            {index < gym.days[showingDay].exercises.length - 1 && (
+              <div
+                className="w-full grid place-items-center hover:bg-slate-200 rounded-b"
+                onClick={() => moveCard(index, index + 1)}
+              >
+                <ChevronDown />
+              </div>
+            )}
           </Card>
         ))}
         <Button
