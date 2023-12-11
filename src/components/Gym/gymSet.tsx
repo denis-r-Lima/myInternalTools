@@ -3,10 +3,17 @@ import { useLoading } from "@/context/loadingContext";
 import { getAuth, getIdToken } from "firebase/auth";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 
 import { FaRegEdit, FaRegWindowClose } from "react-icons/fa";
 import EditModal from "./editModal";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 type GymType = {
   days: {
@@ -143,6 +150,20 @@ const Gym: React.FC = () => {
     updateStore(temp);
   };
 
+  const moveCard = (currentIdx: number, nextIdx: number) => {
+    if (nextIdx < 0 || nextIdx >= gym.days[showingDay].exercises.length) return;
+    const temp: GymType = {
+      days: gym.days.map((d, idx) => {
+        if (idx !== showingDay) return d;
+        const memo = d.exercises[currentIdx];
+        d.exercises[currentIdx] = d.exercises[nextIdx];
+        d.exercises[nextIdx] = memo;
+        return d;
+      }),
+    };
+    updateStore(temp);
+  };
+
   return (
     <>
       <div className="w-10/12 max-w-3xl flex flex-row flex-wrap gap-4 mx-auto justify-center">
@@ -177,10 +198,11 @@ const Gym: React.FC = () => {
         {gym.days[showingDay]?.exercises?.map((e, index) => (
           <Card key={e.name}>
             <CardHeader className="flex-row justify-between items-center">
+              <ChevronUp onClick={() => moveCard(index, index - 1)} />
               <CardTitle>
                 {e.name.charAt(0).toUpperCase() + e.name.slice(1)}
               </CardTitle>
-              <div className="flex-row flex relative bottom-5 gap-2">
+              <div className="flex-row flex relative bottom-5 gap-2 p-2">
                 <FaRegEdit
                   onClick={() => handleEdit(index)}
                   fontSize={"1.3rem"}
@@ -208,6 +230,9 @@ const Gym: React.FC = () => {
                 </h1>
               </div>
             </CardContent>
+            <CardFooter>
+              <ChevronDown onClick={() => moveCard(index, index + 1)} />
+            </CardFooter>
           </Card>
         ))}
         <Button
