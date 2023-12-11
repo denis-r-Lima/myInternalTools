@@ -9,6 +9,10 @@ import { FaRegEdit, FaRegWindowClose } from "react-icons/fa";
 import EditModal from "./editModal";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
+import { FcCancel } from "react-icons/fc";
+import { FaDumbbell } from "react-icons/fa6";
+import { BiSolidMessageSquareEdit } from "react-icons/bi";
+
 type GymType = {
   days: {
     exercises: {
@@ -208,8 +212,15 @@ const Gym: React.FC = () => {
                 <ChevronUp />
               </div>
             )}
+            <div
+              className="relative ml-auto  cursor-pointer"
+              onClick={() => handleDelete(index)}
+            >
+              <FaDumbbell className="absolute top-2 right-2" size={"1.5rem"} />
+              <FcCancel size={"2.5rem"} className="absolute top-0 right-0" />
+            </div>
             <CardHeader className="flex-col flex justify-between items-center">
-              <div className="flex-row flex justify-between w-full">
+              {/* <div className="flex-row flex justify-between w-full">
                 <FaRegEdit
                   onClick={() => handleEdit(index)}
                   fontSize={"1.3rem"}
@@ -218,7 +229,7 @@ const Gym: React.FC = () => {
                   onClick={() => handleDelete(index)}
                   fontSize={"1.3rem"}
                 />
-              </div>
+              </div> */}
               <CardTitle>
                 {e.name.charAt(0).toUpperCase() + e.name.slice(1)}
               </CardTitle>
@@ -229,11 +240,15 @@ const Gym: React.FC = () => {
                   <img src={e.gifUrl} className="max-w-xs w-9/12" />
                 </div>
               )}
-              <div className="flex flex-row justify-between items-start">
+              <div className="flex flex-row justify-between items-center">
                 <h1 className="text-lg">
                   <b>Weight: </b>
                   {e.weight} lb
                 </h1>
+                <BiSolidMessageSquareEdit
+                  onClick={() => handleEdit(index)}
+                  fontSize={"1.3rem"}
+                />
                 <div className="flex flex-col justify-between items-start">
                   <h1 className="text-lg">
                     <b>Sets: </b>
