@@ -16,10 +16,12 @@ type GymType = {
   days: {
     exercises: {
       name: string;
-      weight: number;
+      weight: string;
       set: string;
       rep: string;
       gifUrl: string;
+      instructions: string;
+      id: string;
     }[];
   }[];
 };
@@ -30,10 +32,12 @@ const Gym: React.FC = () => {
   const [showingDay, setShowingDay] = useState(0);
   const [newExercise, setNewExercise] = useState({
     name: "",
-    weight: 0,
+    weight: "",
     set: "",
     rep: "",
     gifUrl: "",
+    instructions: "",
+    id: "",
   });
 
   const [editingIndex, setEditingIndex] = useState(-1);
@@ -58,6 +62,22 @@ const Gym: React.FC = () => {
   useEffect(() => {
     fetchFromStore();
   }, [fetchFromStore]);
+
+  const updateGifs = async () => {
+    const auth = getAuth();
+    if (!auth.currentUser) return;
+    try {
+      setLoadingData(true);
+      const token = await getIdToken(auth.currentUser);
+      const result = await fetch(`/api/gym/updategif`, { headers: { token } });
+      const data: GymType = await result.json();
+      setGym(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoadingData(false);
+    }
+  };
 
   const updateStore = async (data: GymType) => {
     const auth = getAuth();
@@ -116,19 +136,29 @@ const Gym: React.FC = () => {
     setEditingIndex(-1);
     setNewExercise({
       name: "",
-      weight: 0,
+      weight: "",
       set: "",
       rep: "",
       gifUrl: "",
+      instructions: "",
+      id: "",
     });
 
     setOpenPopUp(false);
   };
-  const handleChange = (e: {
-    currentTarget: { name: string; value: string };
-  }) => {
-    const { value, name } = e.currentTarget;
-    setNewExercise((prevState) => ({ ...prevState, [name]: value }));
+  const handleChange = (
+    e: {
+      currentTarget: { name: string; value: string };
+    }[]
+  ) => {
+    const temp = { ...newExercise };
+    e.forEach((val) => {
+      const { value, name } = val.currentTarget;
+      //@ts-ignore
+      temp[name] = value;
+    });
+    setNewExercise(temp);
+    // setNewExercise((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const handleDelete = (index: number) => {
@@ -274,6 +304,12 @@ const Gym: React.FC = () => {
           onClick={() => handleDeleteDay()}
         >
           Delete Day
+        </Button>
+        <Button
+          className="bg-slate-200 text-slate-700 hover:text-slate-200"
+          onClick={updateGifs}
+        >
+          Update Exercise Gifs
         </Button>
       </div>
       {openPopUp && (

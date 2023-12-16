@@ -23,17 +23,18 @@ import {
 } from "../ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { getAuth, getIdToken } from "firebase/auth";
-import Image from "next/image";
 
 type Props = {
   newExercise: {
     name: string;
-    weight: number;
+    weight: string;
     set: string;
     rep: string;
     gifUrl: string;
   };
-  handleChange: (e: { currentTarget: { name: string; value: string } }) => void;
+  handleChange: (
+    e: { currentTarget: { name: string; value: string } }[]
+  ) => void;
   addEdit: (ok?: boolean) => void;
   editingIndex: number;
 };
@@ -64,6 +65,7 @@ type ExerciseList = {
   gifUrl: string;
   name: string;
   id: number;
+  instructions: string[];
 }[];
 
 const EditModal: React.FC<Props> = ({
@@ -97,7 +99,7 @@ const EditModal: React.FC<Props> = ({
 
   useEffect(() => {
     if (target === "") return;
-    handleChange({ currentTarget: { name: "gifUrl", value: "" } });
+    handleChange([{ currentTarget: { name: "gifUrl", value: "" } }]);
     fetchExercise(target);
   }, [fetchExercise, target]);
 
@@ -105,14 +107,26 @@ const EditModal: React.FC<Props> = ({
     const name = {
       currentTarget: { name: "name", value: exerciseList[parseInt(idx)].name },
     };
-    handleChange(name);
     const gifUrl = {
       currentTarget: {
         name: "gifUrl",
         value: exerciseList[parseInt(idx)].gifUrl,
       },
     };
-    handleChange(gifUrl);
+    const instructions = {
+      currentTarget: {
+        name: "instructions",
+        value: exerciseList[parseInt(idx)].instructions.join("\n"),
+      },
+    };
+
+    const id = {
+      currentTarget: {
+        name: "id",
+        value: `${exerciseList[parseInt(idx)].id}`,
+      },
+    };
+    handleChange([name, gifUrl, instructions, id]);
   };
 
   return (
@@ -218,20 +232,20 @@ const EditModal: React.FC<Props> = ({
             placeholder="Weight"
             name="weight"
             value={newExercise.weight}
-            onChange={handleChange}
+            onChange={(e) => handleChange([e])}
             type="number"
           />
           <Input
             placeholder="Sets"
             name="set"
             value={newExercise.set}
-            onChange={handleChange}
+            onChange={(e) => handleChange([e])}
           />
           <Input
             placeholder="Reps"
             name="rep"
             value={newExercise.rep}
-            onChange={handleChange}
+            onChange={(e) => handleChange([e])}
           />
           <Button onClick={() => addEdit(true)}>Ok</Button>
           <Button onClick={() => addEdit()}>Cancel</Button>
